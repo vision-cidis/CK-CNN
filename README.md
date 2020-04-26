@@ -4,9 +4,6 @@
 - Sorry for any inconvenience, we are updating the repo
 ``` -->
 
-This work presents a new Convolutional Neural Network (CNN) arquitecture for edge detection. Unlike of the state-of-the-art CNN based edge detectors, this models has a single training stage, but it is still able to overcome those models in the edge detection datasets. Moreover, Dexined does not need pre-trained weights, and it is trained from the scratch with fewer parameters tunning.
-
-
 This work presents a full pipeline to classify sample sets of corn kernels. The proposed approach follows a segmentation-classification scheme. The image segmentation is performed through a well known deep learning-based approach, the Mask R-CNN architecture, while the classification is performed through a novel-lightweight network specially designed for this task: CK-CNN ---good corn kernel, defective corn kernel and impurity categories are considered. To know more about CK-CNN, read our camera ready version in [ckcnn](http://www.cidis.espol.edu.ec/es/content/deep-learning-based-corn-kernel-classification), this paper will be presented in The 1st International Workshop and Prize Challenge on Agriculture of CVPR2020.
 
 <div style="text-align:center"><img src='figs/ckcnn_architecture.jpg' style="width:70%; display: block;
@@ -26,7 +23,7 @@ This work presents a full pipeline to classify sample sets of corn kernels. The 
 ## Requirements
 
 * [Python 3.7.3](https://www.python.org/downloads/release/python-370/g)
-* [TensorFlow=1.14](https://www.tensorflow.org) (tested on such versions)
+* [TensorFlow=1.14](https://www.tensorflow.org) 
 * [Keras 2.3.1](https://keras.io/#installation)
 * [OpenCV](https://pypi.org/project/opencv-python/)
 * [Matplotlib](https://matplotlib.org/3.1.1/users/installing.html)
@@ -58,7 +55,7 @@ Once the packages are installed,  clone this repo as follow:
 As described above, ckcnn_2class.py and ckcnn_3class.py has the parameters settings, for training ckcnn for 2 class and 3 class classification experiments respectively, before those processes the parameters need to be set. CKCNN is trained with our proposed dataset attached uin the respective section, so make sure to change the route to the right one; however, in the testing stage (Prediction.py), any dataset can be used. However, we evaluated with our proposed "validation" dataset and the arguments have to be well referenced. If you want to experiment with our trained weights, just change the load_model function parameter and set the one is in the model directory on this repo. Pay attention in the parameters' settings, and change whatever you want. 
 
 ```
-saved_model = load_model("3class_RESNET50.h5")
+saved_model = load_model("weights.h5")
 test_data_generator = test_generator.flow_from_directory(
     directory="datasetD/validation_set/validation_set", # Put your path here
     target_size=(224,224),
