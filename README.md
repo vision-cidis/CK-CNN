@@ -4,135 +4,113 @@
 - Sorry for any inconvenience, we are updating the repo
 ``` -->
 
-This work presents a new Convolutional Neural Network (CNN) arquitecture for edge detection. Unlike of the state-of-the-art CNN based edge detectors, this models has a single training stage, but it is still able to overcome those models in the edge detection datasets. Moreover, Dexined does not need pre-trained weights, and it is trained from the scratch with fewer parameters tunning. To know more about DexiNed, read our first version of Dexined in [arxiv](https://arxiv.org/abs/1909.01955), the last version will be uploaded after the camera-ready deadline of WACV2020.
+This work presents a new Convolutional Neural Network (CNN) arquitecture for edge detection. Unlike of the state-of-the-art CNN based edge detectors, this models has a single training stage, but it is still able to overcome those models in the edge detection datasets. Moreover, Dexined does not need pre-trained weights, and it is trained from the scratch with fewer parameters tunning.
 
-<div style="text-align:center"><img src='figs/DexiNed_banner.png' width=800>
+
+This work presents a full pipeline to classify sample sets of corn kernels. The proposed approach follows a segmentation-classification scheme. The image segmentation is performed through a well known deep learning-based approach, the Mask R-CNN architecture, while the classification is performed through a novel-lightweight network specially designed for this task: CK-CNN ---good corn kernel, defective corn kernel and impurity categories are considered. To know more about CK-CNN, read our camera ready version in [ckcnn](http://www.cidis.espol.edu.ec/es/content/deep-learning-based-corn-kernel-classification), this paper will be presented in The 1st International Workshop and Prize Challenge on Agriculture of CVPR2020.
+
+<div style="text-align:center"><img src='figs/ckcnn_architecture.jpg' style="width:70%; display: block;
+  margin-left: auto;
+  margin-right: auto;">
 
 ## Table of Contents
-* [PyTorch](#pytorch)
-* [TensorFlow](#tensorflow)
+* [Keras](#tensorflow)
 * [Datasets](#datasets)
 * [Performance](#performance)
 * [Citation](#citation)
 
-# PyTorch
-To test DexiNed in PyTorch please refer to [DexiNed-Pytorch](https://github.com/xavysp/DexiNed/tree/master/DexiNed-Pytorch) directory
-
-# TensorFlow
+# Keras
 
  Before starting to use this model,  there are some requirements to fullfill.
  
 ## Requirements
 
-* [Python 3.7](https://www.python.org/downloads/release/python-370/g)
-* [TensorFlow>=1.8 <=1.13.1](https://www.tensorflow.org) (tested on such versions)
+* [Python 3.7.3](https://www.python.org/downloads/release/python-370/g)
+* [TensorFlow=1.14](https://www.tensorflow.org) (tested on such versions)
+* [Keras 2.3.1](https://keras.io/#installation)
 * [OpenCV](https://pypi.org/project/opencv-python/)
 * [Matplotlib](https://matplotlib.org/3.1.1/users/installing.html)
-* Other package like Numpy, h5py, PIL. 
+* [Numpy](https://numpy.org/devdocs/user/install.html)
 
 Once the packages are installed,  clone this repo as follow: 
 
-    git clone https://github.com/xavysp/DexiNed.git
-    cd DexiNed
+    git clone https://github.com/cidis/CK-CNN.git
+    cd code
 
 ## Project Architecture
 
 ```
-├── data                        # sample images for testing
-|   ├── lena_std.tif            # sample 1
-|   └── stonehengeuk.jpg        # sample 2
-├── figs                        # Images used in README.md
-|   └── DexiNed_banner.png      # DexiNed banner
-├── models                      # tensorflow model file  
-|   └── dexined.py              # DexiNed class
-├── utls                        # a series of tools used in this repo
-|   └── dataset_manager.py      # tools for dataset managing
-|   └── losses.py               # Loss function used to train DexiNed 
-|   └── utls.py                 # miscellaneous tool functions
-├── run_model.py                # the main python file with main functions and parameter settings
-└── test.py                     # the script to run the test experiment
-└── train.py                    # the script to run the train experiment
+├── data                           # sample images for training and testing
+|   ├── clusters                   # samples for segmentation experiment
+|   └── individual                 # samples for classification experiment
+├── figs                           # Images used in README.md
+|   └── ckcnn_architecture.jpg     # DexiNed banner
+|   └── dataset_example.png        # DexiNed banner
+|   └── maskrcnn_architecture.png  # DexiNed banner
+├── models                         # keras model file  
+|   └── weights.h5                 # weights saved for the ck-cnn test in paper
+├── code                           # a series of tools used in this repo
+|   └── ckcnn_2class.py            # python file with main functions and parameter settings for 2 class classification
+|   └── ckcnn_3class.py            # python file with main functions and parameter settings for 3 class classification 
+|   └── Prediction.py              # the script to run testing experiment and generation of statistics
 ```
 
-As described above, run_model.py has the parameters settings, whether DexiNed is used for training or testing, before those processes the parameters need to be set. As highlighted, DexiNed is trained just one time with our proposed dataset BIPED, so in "--train_dataset" as the default setting is BIDEP; however, in the testing stage (--test_dataset), any dataset can be used, even CLASSIC, which is an arbitrary image downloaded from the internet. However, to evaluate with single images or CLASSIC "--use_dataset" has to be in FALSE mode. Whenever a dataset is used to test or train on DexiNed the arguments have to have the list of training or testing files (--train_list, --test_list). Pay attention in the parameters' settings, and change whatever you want, like ''--image_width'' or ''--image_height''. To test the Lena image I set 512x51 (see "test" section).
+As described above, ckcnn_2class.py and ckcnn_3class.py has the parameters settings, for training ckcnn for 2 class and 3 class classification experiments respectively, before those processes the parameters need to be set. CKCNN is trained with our proposed dataset attached uin the respective section, so make sure to change the route to the right one; however, in the testing stage (Prediction.py), any dataset can be used. However, we evaluated with our proposed "validation" dataset and the arguments have to be well referenced. If you want to experiment with our trained weights, just change the load_model function parameter and set the one is in the model directory on this repo. Pay attention in the parameters' settings, and change whatever you want. 
+
 ```
-parser.add_argument('--train_dataset', default='BIPED', choices=['BIPED','BSDS'])
-parser.add_argument('--test_dataset', default='CLASSIC', choices=['BIPED', 'BSDS','MULTICUE','NYUD','PASCAL','CID'])
-parser.add_argument('--dataset_dir',default=None,type=str)
-parser.add_argument('--dataset_augmented', default=True,type=bool)
-parser.add_argument('--train_list',default='train_rgb.lst', type=str)
-parser.add_argument('--test_list', default='test_pair.lst',type=str)  
+saved_model = load_model("3class_RESNET50.h5")
+test_data_generator = test_generator.flow_from_directory(
+    directory="datasetD/validation_set/validation_set", # Put your path here
+    target_size=(224,224),
+    #batch_size=32,
+    shuffle=False)
 ```
-
-## Test
-Before test the DexiNed model, it is necesarry to download the checkpoint here [Checkpoint from Drive](https://drive.google.com/open?id=1fLBpOrSXC2VOWUvDtNGyrHcuB2IB-4_D) and save those files intro the DexiNed folder like: checkpoints/DXN_BIPED/train/(here the checkpoints from Drive), then run as follow:
-
-    python run_model.py --image_width=512 --image_height=512
-Make sure that in run_model.py the test setting be as:
-```parser.add_argument('--model_state', default='test', choices=['train','test','None'])```
-DexiNed downsample the input image till 16 scales, please make sure that the image width and height be multiple of 16, like 512, 960, and etc.
-
-## Train
-
-    python run_model.py 
-Make sure that in run_model.py the train setting be as:
-```parser.add_argument('--model_state', default='train', choices=['train','test','None'])```
 
 # Datasets
 
-## Dataset used for Training
+<div style="text-align:center"><img src='figs/dataset_example.png' style="width:70%; display: block;
+  margin-left: auto;
+  margin-right: auto;">
+ 
+## Dataset used for both Training and Testing
 
-BIPED (Barcelona Images for Perceptual Edge Detection): This dataset is collected and annotated in the edge level for this work. See more details and download in: [Option1](https://xavysp.github.io/MBIPED/), [Option2 kaggle](https://www.kaggle.com/xavysp/biped)
-
-## Datasets used for Testing
-
-Edge detection datasets
-* [BIPED](https://xavysp.github.io/MBIPED/) and [MDBD](http://serre-lab.clps.brown.edu/resource/multicue/)
-
-Non-edge detection datasets
-
-* [CID](http://www.cs.rug.nl/~imaging/databases/contour_database/contour_database.html) <!-- * [DCD](http://www.cs.cmu.edu/~mengtial/proj/sketch/)-->, [BSDS300](https://www2.eecs.berkeley.edu/Research/Projects/CS/vision/bsds/), [BSDS500](https://www2.eecs.berkeley.edu/Research/Projects/CS/vision/bsds/), [NYUD](https://cs.nyu.edu/~silberman/datasets/nyu_depth_v2.html), and [PASCAL-context](https://cs.stanford.edu/~roozbeh/pascal-context/)
+This dataset is collected and annotated in our laboratories following high quality standards for image adquisition.
+See more details and download in: [Option1](http://www.cidis.espol.edu.ec/es/content/deep-learning-based-corn-kernel-classification)
 
 # Performance
 
-The results below are from the last version of BIPEP. After WACV20, the BIPED images have been again checked and added annotations. All of those models have been trained again. 
+The results below are from the final version of CKCNN compared with other well-known architectures trained with our datasets. 
+
+GCA: Good corn accuracy
+DFA: Defective corn accuracy
+IMP: Impurities accuracy
+AVG: overall accuracy
+PAR: Total number of parameters in K
 
 <center>
 
-|     Methods    |    ODS   |    ODS   |    AP    |
-| -------------- | ---------| -------- | -------- |
-| [SED](https://github.com/ArashAkbarinia/BoundaryDetection) before     | `.717` | `.731` | `.756` |
-| [SED](https://github.com/ArashAkbarinia/BoundaryDetection)      | `.000` | `.000` | `.000` |
-| [HED](https://github.com/s9xie/hed) before     | `.823` | `.847` | `.869` |
-| [HED](https://github.com/s9xie/hed)     | `.000` | `.000` | `.000` |
-| [RCF](https://github.com/yun-liu/rcf) before     | `.843` | `.859` | `.882` |
-| [RCF](https://github.com/yun-liu/rcf)      | `.000` | `.000` | `.000` |
-| [BDCN](https://github.com/pkuCactus/BDCN) before    | `.839` | `.854` | `.887` |
-| [BDCN](https://github.com/pkuCactus/BDCN)     | `.000` | `.000` | `.000` |
-| DexiNed(WACV'20)| `.859` | `.867` | `.905` |
-| DexiNed(Ours)| `.000` | `.000` | `.000` |
+|     Network    |    GCA   |    DFA   |    IMP   |    AVG   |   PAR(K)  |
+| -------------- | ---------| -------- | -------- | ---------| --------- |
+| [CKCNN(ours)](https://github.com/cidis/CK-CNN/)            | `.979` | `.900` | `.973` | `.956` |    `3306` |
+| [VGG-16](https://github.com/1297rohit/VGG16-In-Keras)      | `.974` | `.876` | `.819` | `.890` | `134.272` |
+| [RESNET-50](https://github.com/s9xie/hed)                  | `.986` | `.860` | `.931` | `.925` |   `23593` |
+| [MASK-RCNN](https://github.com/matterport/Mask_RCNN)       | `.960` | `.695` | `.286` | `.647` |   `63738` |
+
 </center>
-Evaluation performed to BIPED dataset. We will update the result soon.
+Evaluation performed with our provided dataset. Fine-tuning is in progress, we will update the results soon.
 
 # Citation
 Please cite our paper if you find helpful,
 ```
-@InProceedings{soria2020dexined,
-    title={Dense Extreme Inception Network: Towards a Robust CNN Model for Edge Detection},
-    author={Xavier Soria and Edgar Riba and Angel Sappa},
-    booktitle={The IEEE Winter Conference on Applications of Computer Vision (WACV '20)},
-    year={2020}
+@inproceedings{corn2020ckcnn,
+  title={Deep Learning based Corn Kernel Classification},
+  author={Velesaca, Henry O. and Mira, Raúl and Suarez, Patricia L. and Larrea, Christian X. and Sappa, Angel D.},
+  booktitle={The 1st International Workshop on Agriculture-Vision: Challenges & Opportunities for Computer Vision in Agriculture},
+  pages={},
+  year={2020},
+  organization={}
 }
 ```
 
-<!--```
-@misc{soria2020dexined_ext,
-    title={Towards a Robust Deep Learning Model for Edge Detection},
-    author={Xavier Soria and Edgar Riba and Angel Sappa},
-    year={2020},
-    eprint={000000000},
-    archivePrefix={arXiv},
-    primaryClass={cs.CV}
-```-->
 
 
