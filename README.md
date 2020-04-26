@@ -41,9 +41,9 @@ Once the packages are installed,  clone this repo as follow:
 |   ├── clusters                   # samples for segmentation experiment
 |   └── individual                 # samples for classification experiment
 ├── figs                           # Images used in README.md
-|   └── ckcnn_architecture.jpg     # DexiNed banner
-|   └── dataset_example.png        # DexiNed banner
-|   └── maskrcnn_architecture.png  # DexiNed banner
+|   └── ckcnn_architecture.jpg     # ckcnn banner for model architecture
+|   └── dataset_example.png        # dataset example banner
+|   └── maskrcnn_architecture.png  # mask r-cnn banner for model architecture
 ├── models                         # keras model file  
 |   └── weights.h5                 # weights saved for the ck-cnn test in paper
 ├── code                           # a series of tools used in this repo
@@ -78,11 +78,11 @@ See more details and download in: [Option1](http://www.cidis.espol.edu.ec/es/con
 
 The results below are from the final version of CKCNN compared with other well-known architectures trained with our datasets. 
 
-GCA: Good corn accuracy
-DFA: Defective corn accuracy
-IMP: Impurities accuracy
-AVG: overall accuracy
-PAR: Total number of parameters in K
+GCA: Good corn accuracy\
+DFA: Defective corn accuracy\
+IMP: Impurities accuracy\
+AVG: overall accuracy\
+PAR: Total number of parameters in K\
 
 <center>
 
