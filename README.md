@@ -1,4 +1,5 @@
-# CK-CNN Deep learning based Corn Kernel classification
+
+# Deep learning based Corn Kernel classification
 
 <!-- ```diff
 - Sorry for any inconvenience, we are updating the repo
@@ -6,33 +7,25 @@
 
 This work presents a full pipeline to classify sample sets of corn kernels. The proposed approach follows a segmentation-classification scheme. The image segmentation is performed through a well known deep learning-based approach, the Mask R-CNN architecture, while the classification is performed through a novel-lightweight network specially designed for this task: CK-CNN ---good corn kernel, defective corn kernel and impurity categories are considered. To know more about CK-CNN, read our camera ready version in [ckcnn](http://www.cidis.espol.edu.ec/es/content/deep-learning-based-corn-kernel-classification), this paper will be presented in The 1st International Workshop and Prize Challenge on Agriculture of CVPR2020.
 
-<div style="text-align:center"><img src='figs/ckcnn_architecture.jpg' style="width:70%; display: block;
-  margin-left: auto;
-  margin-right: auto;">
+## Segmentation 
+To segment the elements for a further classification. the Mask R-CNN network is trained This [implementation](https://github.com/matterport/Mask_RCNN) of the Mask R-CNN network has been used to perform the image segmentation. This architecture generates bounding boxes and segmentation masks for each instance of the corn kernel and impurity present in the given image. This implementation is based on ResNet-101 as a backbone and pre-trained COCO weight
+
+## Classification
+A novel-lightweight architecture is proposed to classify a given element into some of the following classes: good corn, defective corn (including broken and rotten corns) and impurity. The proposed architecture, referred to as CK-CNN, receives as an input a single element from the segmentation algorithm and consists of five layers: three convolutional layers defined with a 3 X 3 size kernels and two fully connected layers. The model uses a cross-entropy loss function to measure the performance of the classification model. Also, the model includes a RELU activation function after each convolution and a max pool layer to summarize the results of the convolution operation. The last two layers are fully connected, the first one receives the output of the last convolutional layer, which allows all the outputs of the convolution operation to be connected, as was done in the multilayer perceptron (MLP) technique. The last fully-connected layer enables the class score using the softmax activation function, to obtain the probability distribution that corresponds to each class type. 
+
+The proposed model supports the n-class classification problem. In our case, this model has been used for a 2-class classification (good or defective corn kernels) and for a 3-class classification (good corn kernels, defective corn kernels and impurity). The CK-CNN network has been trained from scratch using Nesterov ADAM (NADAM) optimizer with a learning rate of 0.0002, which provides a faster convergence and generalization of the model. 
+
+<div align="center" style="text-align:center"><img src='figs/ckcnn_architecture.jpg'  align="center" width="75%" height="75%">
+
+
 
 ## Table of Contents
-* [Keras](#tensorflow)
+* [Project architecture](#architecture)
 * [Datasets](#datasets)
 * [Performance](#performance)
 * [Citation](#citation)
 
-# Keras
 
- Before starting to use this model,  there are some requirements to fullfill.
- 
-## Requirements
-
-* [Python 3.7.3](https://www.python.org/downloads/release/python-370/g)
-* [TensorFlow=1.14](https://www.tensorflow.org) 
-* [Keras 2.3.1](https://keras.io/#installation)
-* [OpenCV](https://pypi.org/project/opencv-python/)
-* [Matplotlib](https://matplotlib.org/3.1.1/users/installing.html)
-* [Numpy](https://numpy.org/devdocs/user/install.html)
-
-Once the packages are installed,  clone this repo as follow: 
-
-    git clone https://github.com/cidis/CK-CNN.git
-    cd code
 
 ## Project Architecture
 
@@ -106,6 +99,15 @@ Please cite our paper if you find helpful,
   pages={},
   year={2020},
   organization={}
+}
+
+Mask R-CNN
+@inproceedings{he2017mask,
+  title={Mask r-cnn},
+  author={He, Kaiming and Gkioxari, Georgia and Doll{\'a}r, Piotr and Girshick, Ross},
+  booktitle={Proceedings of the IEEE international conference on computer vision},
+  pages={2961--2969},
+  year={2017}
 }
 ```
 
