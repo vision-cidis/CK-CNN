@@ -15,7 +15,9 @@ A novel-lightweight architecture is proposed to classify a given element into so
 
 The proposed model supports the n-class classification problem. In our case, this model has been used for a 2-class classification (good or defective corn kernels) and for a 3-class classification (good corn kernels, defective corn kernels and impurity). The CK-CNN network has been trained from scratch using Nesterov ADAM (NADAM) optimizer with a learning rate of 0.0002, which provides a faster convergence and generalization of the model. 
 
-<div align="center" style="text-align:center"><img src='figs/ckcnn_architecture.jpg'  align="center" width="75%" height="75%">
+<div align="center" style="text-align:center">
+    <img src='figs/ckcnn_architecture.jpg'  align="center" width="75%" height="75%">
+</div>
 
 
 
